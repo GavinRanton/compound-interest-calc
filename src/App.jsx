@@ -117,8 +117,8 @@ function App() {
     interestDeficitYear,
     ruinYear
   } = useMemo(() =>
-    calculateDrawdown(finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum),
-    [finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum]
+    calculateDrawdown(finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum, lumpSumPercentage),
+    [finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum, lumpSumPercentage]
   );
 
   // Track Ruin Warning

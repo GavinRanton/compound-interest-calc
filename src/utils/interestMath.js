@@ -191,17 +191,20 @@ export const findCoastFireYear = (balanceData, annualRate, totalYears, targetBal
  * @param {number} monthlyDrawdown - Amount taken out per month
  * @param {number} annualRate - Annual interest rate in percent
  * @param {number} years - Duration to plan for
- * @param {boolean} takeLumpSum - Whether to take 25% tax-free lump sum at start
+ * @param {boolean} takeLumpSum - Whether to take tax-free lump sum at start
+ * @param {number} lumpSumPercentage - Percentage to take (default 25)
  * @returns {Object} result
  */
-export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years, takeLumpSum) => {
+export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years, takeLumpSum, lumpSumPercentage = 25) => {
     const r = annualRate / 100;
     const n = 12;
     const totalMonths = years * 12;
 
-    let balance = takeLumpSum ? initialPot * 0.75 : initialPot;
-    let totalWithdrawn = 0;
+    const fraction = lumpSumPercentage / 100;
+    const lumpSumAmount = takeLumpSum ? Math.round(initialPot * fraction) : 0;
+    let balance = initialPot - lumpSumAmount;
 
+    let totalWithdrawn = 0;
 
     const balanceData = [Math.round(balance)];
     const withdrawnData = [0];
@@ -254,7 +257,7 @@ export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years
         withdrawnData,
         finalBalance: Math.round(balance),
         totalWithdrawn: Math.round(totalWithdrawn),
-        lumpSum: takeLumpSum ? Math.round(initialPot * 0.25) : 0,
+        lumpSum: lumpSumAmount,
         interestDeficitYear,
         ruinYear
     };
