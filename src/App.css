@@ -499,4 +499,25 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+}/* Mobile Sticky Footer */
+.mobile-sticky-footer {
+    display: none;
+    /* Hidden by default on desktop */
+}
+
+@media (max-width: 768px) {
+    .mobile-sticky-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 15px 20px;
+        box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+        z-index: 1000;
+        border-top: 1px solid #f1f5f9;
+    }
 }
