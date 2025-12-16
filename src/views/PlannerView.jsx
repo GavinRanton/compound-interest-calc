@@ -14,7 +14,8 @@ const PlannerView = ({
     totalContributed, totalInterest,
     crossoverYear, coastFireYear,
     showComparison, setShowComparison, scenarioBDelay, setScenarioBDelay,
-    openModal, onNavigate, formatCurrency, formatPercent, formatYears
+    openModal, onNavigate, formatCurrency, formatPercent, formatYears,
+    setCurrency, isInflationAdjusted, setIsInflationAdjusted, inflationRate, setInflationRate
 }) => {
     // Local state for Age based planning
     // We initialise local state based on the global state prop 'years'
@@ -100,6 +101,45 @@ const PlannerView = ({
                     unit=""
                     formatFn={formatPercent}
                 />
+
+                <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
+
+                <h3>Settings ⚙️</h3>
+
+                <div className="setting-group" style={{ marginBottom: '15px' }}>
+                    <label style={{ fontWeight: '600', color: 'var(--text-muted)', display: 'block', marginBottom: '5px' }}>Currency</label>
+                    <select
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem', width: '100%' }}
+                    >
+                        <option value="£">GBP (£)</option>
+                        <option value="$">USD ($)</option>
+                        <option value="€">EUR (€)</option>
+                    </select>
+                </div>
+
+                <div className="setting-group">
+                    <label className="checkbox-label" style={{ marginBottom: isInflationAdjusted ? '10px' : '0' }}>
+                        <input
+                            type="checkbox"
+                            checked={isInflationAdjusted}
+                            onChange={(e) => setIsInflationAdjusted(e.target.checked)}
+                        />
+                        Adjust for Inflation?
+                    </label>
+
+                    {isInflationAdjusted && (
+                        <Slider
+                            label="Inflation Rate"
+                            value={inflationRate}
+                            onChange={setInflationRate}
+                            min={0} max={15} step={0.5}
+                            unit="%"
+                            formatFn={(v) => `${v}%`}
+                        />
+                    )}
+                </div>
 
                 <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
 

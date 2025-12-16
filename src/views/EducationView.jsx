@@ -13,7 +13,9 @@ const EducationView = ({
     finalBalance, totalContributed, totalInterest,
     crossoverYear, coastFireYear,
     comparisonBalanceData,
-    openModal, formatCurrency, formatPercent, formatYears
+    showComparison, setShowComparison, scenarioBDelay, setScenarioBDelay,
+    openModal, formatCurrency, formatPercent, formatYears,
+    setCurrency, isInflationAdjusted, setIsInflationAdjusted, inflationRate, setInflationRate
 }) => {
     return (
         <main className="main-grid">
@@ -49,13 +51,73 @@ const EducationView = ({
                 />
 
                 <Slider
-                    label="Time Horizon"
-                    value={years}
-                    onChange={setYears}
-                    min={1} max={50} step={1}
-                    unit=""
                     formatFn={formatYears}
                 />
+
+                <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
+
+                <h3>Settings ⚙️</h3>
+
+                <div className="setting-group" style={{ marginBottom: '15px' }}>
+                    <label style={{ fontWeight: '600', color: 'var(--text-muted)', display: 'block', marginBottom: '5px' }}>Currency</label>
+                    <select
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem', width: '100%' }}
+                    >
+                        <option value="£">GBP (£)</option>
+                        <option value="$">USD ($)</option>
+                        <option value="€">EUR (€)</option>
+                    </select>
+                </div>
+
+                <div className="setting-group">
+                    <label className="checkbox-label" style={{ marginBottom: isInflationAdjusted ? '10px' : '0' }}>
+                        <input
+                            type="checkbox"
+                            checked={isInflationAdjusted}
+                            onChange={(e) => setIsInflationAdjusted(e.target.checked)}
+                        />
+                        Adjust for Inflation?
+                    </label>
+
+                    {isInflationAdjusted && (
+                        <Slider
+                            label="Inflation Rate"
+                            value={inflationRate}
+                            onChange={setInflationRate}
+                            min={0} max={15} step={0.5}
+                            unit="%"
+                            formatFn={(v) => `${v}%`}
+                        />
+                    )}
+                </div>
+
+                <div className="setting-group" style={{ marginTop: '15px' }}>
+                    <label className="checkbox-label" style={{ marginBottom: showComparison ? '10px' : '0' }}>
+                        <input
+                            type="checkbox"
+                            checked={showComparison}
+                            onChange={(e) => setShowComparison(e.target.checked)}
+                        />
+                        Compare vs Delay? 🆚
+                    </label>
+                    {showComparison && (
+                        <div style={{ marginTop: '10px', paddingLeft: '10px', borderLeft: '3px solid #f59e0b' }}>
+                            <Slider
+                                label="Delay Start by"
+                                value={scenarioBDelay}
+                                onChange={setScenarioBDelay}
+                                min={1} max={10} step={1}
+                                unit=" yrs"
+                                formatFn={(v) => `${v} yrs`}
+                            />
+                            <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#856404', marginTop: '5px' }}>
+                                Loss: <strong>{formatCurrency(finalBalance - (comparisonBalanceData ? comparisonBalanceData[comparisonBalanceData.length - 1] : 0))}</strong>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </section>
 
             <section className="viz-panel">
