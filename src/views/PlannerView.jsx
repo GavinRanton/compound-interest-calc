@@ -100,6 +100,32 @@ const PlannerView = ({
                     unit=""
                     formatFn={formatPercent}
                 />
+
+                <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px solid #eee' }} />
+
+                <div className="control-group" style={{ marginBottom: '10px' }}>
+                    <label className="checkbox-label" style={{ marginBottom: showComparison ? '15px' : '0' }}>
+                        <input
+                            type="checkbox"
+                            checked={showComparison}
+                            onChange={(e) => setShowComparison(e.target.checked)}
+                        />
+                        Show Cost of Delay? ⏱️
+                    </label>
+
+                    {showComparison && (
+                        <div style={{ marginTop: '10px', paddingLeft: '10px', borderLeft: '3px solid #f59e0b' }}>
+                            <Slider
+                                label="Delay Start by"
+                                value={scenarioBDelay}
+                                onChange={setScenarioBDelay}
+                                min={1} max={10} step={1}
+                                unit=" yrs"
+                                formatFn={(v) => `${v} yrs`}
+                            />
+                        </div>
+                    )}
+                </div>
             </section>
 
             <section className="viz-panel">
@@ -119,40 +145,16 @@ const PlannerView = ({
                         label="Interest Earned"
                         value={formatCurrency(totalInterest)}
                     />
-                    <div className="setting-group" style={{
-                        gridColumn: '1 / -1', // Span full width
-                        background: '#f8fafc',
-                        padding: '10px',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}>
-                        <label className="checkbox-label" style={{ marginBottom: 0, fontWeight: 600 }}>
-                            <input
-                                type="checkbox"
-                                checked={showComparison}
-                                onChange={(e) => setShowComparison(e.target.checked)}
-                            />
-                            Show Cost of Delay? ⏱️
-                        </label>
-                    </div>
-
                     {showComparison && (
-                        <div style={{ gridColumn: '1 / -1', background: '#fff3cd', padding: '15px', borderRadius: '12px', border: '1px solid #ffeeba' }}>
-                            <Slider
-                                label="Delay Start by"
-                                value={scenarioBDelay}
-                                onChange={setScenarioBDelay}
-                                min={1} max={10} step={1}
-                                unit=" yrs"
-                                formatFn={(v) => `${v} yrs`}
-                            />
-                            <div style={{ textAlign: 'center', fontSize: '0.9rem', color: '#856404', marginTop: '5px' }}>
-                                <strong>Waiting {scenarioBDelay} years costs you:</strong> <br />
-                                <span style={{ fontSize: '1.2rem', fontWeight: 800 }}>{formatCurrency(finalBalance - comparisonFinalBalance)}</span>
-                            </div>
-                        </div>
+                        <SummaryTile
+                            label="Cost of Waiting"
+                            value={
+                                <span style={{ color: '#ef4444' }}>
+                                    -{formatCurrency(finalBalance - comparisonFinalBalance)}
+                                </span>
+                            }
+                            subtext={`Loss from waiting ${scenarioBDelay} years`}
+                        />
                     )}
                 </div>
 
