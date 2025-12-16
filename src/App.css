@@ -393,6 +393,8 @@ body {
 .tabs-container {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  /* Allow wrapping */
   gap: 10px;
   margin-bottom: 30px;
   background: white;
