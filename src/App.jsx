@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import ReactGA from "react-ga4";
 import Tabs from './components/Tabs';
 import InfoModal from './components/InfoModal';
 import Slider from './components/Slider'; // For settings
@@ -10,9 +11,17 @@ import HelpView from './views/HelpView';
 import { calculateGrowth, findCrossoverYear, calculateDrawdown, findCoastFireYear } from './utils/interestMath';
 import './App.css';
 
+// Initialize Google Analytics with User ID
+ReactGA.initialize("G-L0LWQVG5C3");
+
 function App() {
   // Navigation State
   const [activeTab, setActiveTab] = useState('education');
+
+  // Track Page Views on Tab Change
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: `/${activeTab}`, title: activeTab.charAt(0).toUpperCase() + activeTab.slice(1) });
+  }, [activeTab]);
 
   // State for Accumulation Phase (Shared Source of Truth)
   const [startAmount, setStartAmount] = useState(1000);
@@ -111,6 +120,17 @@ function App() {
     calculateDrawdown(finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum),
     [finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum]
   );
+
+  // Track Ruin Warning
+  useEffect(() => {
+    if (ruinYear) {
+      ReactGA.event({
+        category: "Drawdown",
+        action: "ruin_warning_shown",
+        label: `Ruin Year: ${ruinYear}`
+      });
+    }
+  }, [ruinYear]);
 
   // Formatters
   const formatCurrency = (val) => `${currency}${val.toLocaleString()}`;
