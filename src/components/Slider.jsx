@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Slider = ({ label, value, onChange, min, max, step = 1, unit = '', formatFn, manualInput = false }) => {
+const Slider = ({ label, value, onChange, min, max, step = 1, unit = '', formatFn }) => {
 
     const displayValue = formatFn ? formatFn(value) : value;
 
@@ -22,19 +22,15 @@ const Slider = ({ label, value, onChange, min, max, step = 1, unit = '', formatF
         <div className="slider-container">
             <div className="slider-header">
                 <label className="slider-label">{label}</label>
-                {manualInput ? (
-                    <div className="slider-input-wrapper">
-                        <span className="input-prefix">{unit}</span>
-                        <input
-                            type="number"
-                            value={value}
-                            onChange={handleInputChange}
-                            className="manual-input"
-                        />
-                    </div>
-                ) : (
-                    <span className="slider-value">{unit}{displayValue}</span>
-                )}
+                <div className="slider-input-wrapper">
+                    <span className="input-prefix">{unit}</span>
+                    <input
+                        type="number"
+                        value={value}
+                        onChange={handleInputChange}
+                        className="manual-input"
+                    />
+                </div>
             </div>
             <input
                 type="range"
