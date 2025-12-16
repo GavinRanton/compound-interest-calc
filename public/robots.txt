@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://compound-interest-calc.vercel.app/sitemap.xml
