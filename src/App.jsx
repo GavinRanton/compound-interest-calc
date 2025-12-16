@@ -84,8 +84,8 @@ function App() {
     totalContributed,
     totalInterest
   } = useMemo(() =>
-    calculateGrowth(startAmount, monthlyContribution, annualRate, years, isInflationAdjusted ? inflationRate : 0),
-    [startAmount, monthlyContribution, annualRate, years, isInflationAdjusted, inflationRate]
+    calculateGrowth(startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted),
+    [startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted]
   );
 
   const {
