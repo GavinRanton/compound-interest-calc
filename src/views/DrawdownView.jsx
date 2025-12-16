@@ -7,7 +7,9 @@ const DrawdownView = ({
     drawdownAmount, setDrawdownAmount,
     drawdownRate, setDrawdownRate,
     drawdownYears, setDrawdownYears,
+    drawdownYears, setDrawdownYears,
     takeLumpSum, setTakeLumpSum,
+    lumpSumPercentage, setLumpSumPercentage,
     currency,
     drawdownLabels, drawdownBalanceData, drawdownWithdrawnData,
     drawdownFinalBalance, drawdownTotalWithdrawn,
@@ -24,15 +26,30 @@ const DrawdownView = ({
                 </p>
 
                 <div className="control-group">
-                    <label className="checkbox-label">
+                    <label className="checkbox-label" style={{ marginBottom: takeLumpSum ? '15px' : '0' }}>
                         <input
                             type="checkbox"
                             checked={takeLumpSum}
                             onChange={(e) => setTakeLumpSum(e.target.checked)}
                         />
-                        Take 25% Tax-Free Lump Sum
+                        Take Tax-Free Lump Sum?
                     </label>
-                    {takeLumpSum && <div className="lump-sum-display">You take: <strong>{formatCurrency(lumpSum)}</strong></div>}
+
+                    {takeLumpSum && (
+                        <div style={{ marginTop: '10px', paddingLeft: '10px', borderLeft: '3px solid var(--primary-color)' }}>
+                            <Slider
+                                label="Lump Sum %"
+                                value={lumpSumPercentage}
+                                onChange={setLumpSumPercentage}
+                                min={0} max={100} step={5}
+                                unit="%"
+                                formatFn={(v) => `${v}%`}
+                            />
+                            <div className="lump-sum-display" style={{ paddingLeft: 0, marginTop: 0 }}>
+                                You take: <strong>{formatCurrency(lumpSum)}</strong>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <Slider

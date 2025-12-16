@@ -6,6 +6,7 @@ import Slider from './components/Slider'; // For settings
 import EducationView from './views/EducationView';
 import PlannerView from './views/PlannerView';
 import DrawdownView from './views/DrawdownView';
+import HelpView from './views/HelpView';
 import { calculateGrowth, findCrossoverYear, calculateDrawdown, findCoastFireYear } from './utils/interestMath';
 import './App.css';
 
@@ -58,11 +59,12 @@ function App() {
     setModalOpen(true);
   };
 
-  // State for Drawdown Phase
+  // State for Decumulation Phase
   const [drawdownAmount, setDrawdownAmount] = useState(2000);
   const [drawdownRate, setDrawdownRate] = useState(5);
-  const [drawdownYears, setDrawdownYears] = useState(25);
+  const [drawdownYears, setDrawdownYears] = useState(20);
   const [takeLumpSum, setTakeLumpSum] = useState(false);
+  const [lumpSumPercentage, setLumpSumPercentage] = useState(25); // New State
 
   // Derived state (Accumulation)
   const {
@@ -73,8 +75,8 @@ function App() {
     totalContributed,
     totalInterest
   } = useMemo(() =>
-    calculateGrowth(startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted),
-    [startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted]
+    calculateGrowth(startAmount, monthlyContribution, annualRate, years, isInflationAdjusted ? inflationRate : 0),
+    [startAmount, monthlyContribution, annualRate, years, isInflationAdjusted, inflationRate]
   );
 
   const {
@@ -227,6 +229,7 @@ function App() {
           drawdownRate={drawdownRate} setDrawdownRate={setDrawdownRate}
           drawdownYears={drawdownYears} setDrawdownYears={setDrawdownYears}
           takeLumpSum={takeLumpSum} setTakeLumpSum={setTakeLumpSum}
+          lumpSumPercentage={lumpSumPercentage} setLumpSumPercentage={setLumpSumPercentage}
           currency={currency}
           drawdownLabels={drawdownLabels}
           drawdownBalanceData={drawdownBalanceData}
@@ -242,6 +245,8 @@ function App() {
           formatYears={formatYears}
         />
       )}
+
+      {activeTab === 'help' && <HelpView />}
 
       <InfoModal
         isOpen={modalOpen}

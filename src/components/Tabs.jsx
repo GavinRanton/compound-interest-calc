@@ -21,6 +21,12 @@ const Tabs = ({ activeTab, onTabChange }) => {
             >
                 🏡 Live
             </button>
+            <button
+                className={`tab-btn ${activeTab === 'help' ? 'active' : ''}`}
+                onClick={() => onTabChange('help')}
+            >
+                ❓ Help
+            </button>
         </div>
     );
 };
