@@ -3,7 +3,7 @@ import Slider from './components/Slider';
 import SummaryTile from './components/SummaryTile';
 import GrowthChart from './components/GrowthChart';
 import DrawdownChart from './components/DrawdownChart';
-import { calculateGrowth, findCrossoverYear, calculateDrawdown } from './utils/interestMath';
+import { calculateGrowth, findCrossoverYear, calculateDrawdown, findCoastFireYear } from './utils/interestMath';
 import './App.css';
 
 function App() {
@@ -40,6 +40,11 @@ function App() {
   const crossoverYear = useMemo(() =>
     findCrossoverYear(startAmount, monthlyContribution, annualRate, years),
     [startAmount, monthlyContribution, annualRate, years]
+  );
+
+  const coastFireYear = useMemo(() =>
+    findCoastFireYear(growthBalanceData, annualRate, years, finalBalance),
+    [growthBalanceData, annualRate, years, finalBalance]
   );
 
   // Derived state (Drawdown)
@@ -173,6 +178,12 @@ function App() {
               value={crossoverYear ? `Year ${crossoverYear}` : 'Not yet'}
               subtext={crossoverYear ? "Interest > Contributions!" : "Keep saving!"}
               highlight={!!crossoverYear}
+            />
+            <SummaryTile
+              label="Coast FIRE 🏖️"
+              value={coastFireYear ? `Year ${coastFireYear}` : 'Not yet'}
+              subtext={coastFireYear ? "Stop saving & still hit target!" : "Keep going!"}
+              highlight={!!coastFireYear}
             />
           </div>
 

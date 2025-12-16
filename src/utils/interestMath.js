@@ -118,7 +118,37 @@ export const findCrossoverYear = (startAmount, monthlyContribution, annualRate, 
 
     return null;
 };
+/**
+ * Finds the "Coast FIRE" year.
+ * This is the year where the accumulated balance, if grown at the annualRate WITHOUT further contributions,
+ * would still reach (or exceed) the targetBalance by the end of the total years.
+ * 
+ * @param {Array} balanceData - Array of balances at each year
+ * @param {number} annualRate - Annual growth rate
+ * @param {number} totalYears - Total duration
+ * @param {number} targetBalance - The final goal amount
+ * @returns {number|null} The Coast Fire Year, or null
+ */
+export const findCoastFireYear = (balanceData, annualRate, totalYears, targetBalance) => {
+    const r = annualRate / 100;
 
+    // Iterate through each year's balance
+    // balanceData index 0 is Year 0, index 1 is Year 1...
+    for (let i = 0; i < balanceData.length; i++) {
+        const currentBalance = balanceData[i];
+        const yearsRemaining = totalYears - i;
+
+        if (yearsRemaining <= 0) continue;
+
+        // Future Value = PV * (1 + r)^t
+        const projectedValue = currentBalance * Math.pow((1 + r), yearsRemaining);
+
+        if (projectedValue >= targetBalance) {
+            return i;
+        }
+    }
+    return null;
+};
 /**
  * Calculates pension drawdown over time.
  * 
