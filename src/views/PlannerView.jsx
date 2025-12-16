@@ -10,9 +10,11 @@ const PlannerView = ({
     years, setYears,
     currency,
     growthLabels, growthBalanceData, growthContributionData,
-    finalBalance, totalContributed, totalInterest,
+    comparisonBalanceData, finalBalance, comparisonFinalBalance,
+    totalContributed, totalInterest,
     crossoverYear, coastFireYear,
-    openModal, formatCurrency, formatPercent, formatYears
+    showComparison, setShowComparison, scenarioBDelay, setScenarioBDelay,
+    openModal, onNavigate, formatCurrency, formatPercent, formatYears
 }) => {
     // Local state for Age based planning
     // We initialise local state based on the global state prop 'years'
@@ -117,13 +119,41 @@ const PlannerView = ({
                         label="Interest Earned"
                         value={formatCurrency(totalInterest)}
                     />
-                    <SummaryTile
-                        label="Coast FIRE 🏖️"
-                        value={coastFireYear ? `Age ${currentAge + coastFireYear}` : 'Not yet'}
-                        subtext={coastFireYear ? "Stop saving early!" : "Keep going!"}
-                        highlight={!!coastFireYear}
-                        onInfoClick={() => openModal('coast')}
-                    />
+                    <div className="setting-group" style={{
+                        gridColumn: '1 / -1', // Span full width
+                        background: '#f8fafc',
+                        padding: '10px',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <label className="checkbox-label" style={{ marginBottom: 0, fontWeight: 600 }}>
+                            <input
+                                type="checkbox"
+                                checked={showComparison}
+                                onChange={(e) => setShowComparison(e.target.checked)}
+                            />
+                            Show Cost of Delay? ⏱️
+                        </label>
+                    </div>
+
+                    {showComparison && (
+                        <div style={{ gridColumn: '1 / -1', background: '#fff3cd', padding: '15px', borderRadius: '12px', border: '1px solid #ffeeba' }}>
+                            <Slider
+                                label="Delay Start by"
+                                value={scenarioBDelay}
+                                onChange={setScenarioBDelay}
+                                min={1} max={10} step={1}
+                                unit=" yrs"
+                                formatFn={(v) => `${v} yrs`}
+                            />
+                            <div style={{ textAlign: 'center', fontSize: '0.9rem', color: '#856404', marginTop: '5px' }}>
+                                <strong>Waiting {scenarioBDelay} years costs you:</strong> <br />
+                                <span style={{ fontSize: '1.2rem', fontWeight: 800 }}>{formatCurrency(finalBalance - comparisonFinalBalance)}</span>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="chart-container">
@@ -131,22 +161,30 @@ const PlannerView = ({
                         labels={growthLabels}
                         balanceData={growthBalanceData}
                         contributionData={growthContributionData}
-                        crossoverYear={crossoverYear}
+                        crossoverYear={null} // Hide crossover on planner
+                        comparisonBalanceData={comparisonBalanceData}
                     />
                 </div>
 
                 {/* Smart Link to Drawdown */}
-                <div style={{
-                    marginTop: '20px',
-                    padding: '15px',
-                    background: 'var(--primary-gradient)',
-                    borderRadius: '12px',
-                    color: 'white',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)'
-                }}>
+                <button
+                    onClick={() => onNavigate('drawdown')}
+                    className="planner-link-btn"
+                    style={{
+                        marginTop: '20px',
+                        width: '100%',
+                        padding: '15px',
+                        background: 'var(--primary-gradient)',
+                        border: 'none',
+                        borderRadius: '12px',
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)',
+                        cursor: 'pointer',
+                        textAlign: 'left'
+                    }}>
                     <div>
                         <strong style={{ fontSize: '1.1rem' }}>What does {formatCurrency(finalBalance)} get you?</strong>
                         <div style={{ opacity: 0.9, fontSize: '0.9rem' }}>Simulate your retirement lifestyle now.</div>

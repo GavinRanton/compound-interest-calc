@@ -124,8 +124,11 @@ function App() {
     growthLabels, growthBalanceData, growthContributionData,
     finalBalance, totalContributed, totalInterest,
     crossoverYear, coastFireYear,
-    comparisonBalanceData,
+    comparisonBalanceData, comparisonFinalBalance,
+    showComparison, setShowComparison,
+    scenarioBDelay, setScenarioBDelay,
     openModal,
+    onNavigate: setActiveTab,
     formatCurrency, formatPercent, formatYears
   };
 
@@ -246,6 +249,13 @@ function App() {
         title={modalContent.title}
         content={modalContent.content}
       />
+
+      {/* Sticky Mobile Footer */}
+      <div className="mobile-sticky-footer">
+        <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>Projected Pot</div>
+        <div style={{ fontSize: '1.4rem', fontWeight: '800' }}>{formatCurrency(finalBalance)}</div>
+      </div>
+
     </div>
   );
 }

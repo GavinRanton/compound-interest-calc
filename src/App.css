@@ -55,28 +55,37 @@ body {
   color: var(--text-muted);
 }
 
+/* Main Layout Grid */
 .main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  display: flex;
+  flex-direction: column;
   gap: 30px;
   width: 100%;
+  /* Added width: 100% to match original behavior */
 }
 
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
   .main-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    /* Fixed width controls, flex chart */
+    gap: 40px;
+    align-items: start;
   }
 }
 
-/* Controls Panel */
+/* Panels */
 .controls-panel {
   background: var(--card-bg);
-  padding: 30px;
+  /* Kept original var(--card-bg) */
+  padding: 25px;
   border-radius: var(--card-radius);
+  /* Kept original var(--card-radius) */
   box-shadow: var(--card-shadow);
   height: fit-content;
+  /* Kept original height: fit-content */
   border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Kept original border */
 }
 
 .controls-panel h2 {
@@ -87,21 +96,13 @@ body {
   font-weight: 700;
 }
 
-/* Visualization Panel */
 .viz-panel {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-}
-
-/* Summary Grid */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 20px;
 }
 
-/* Chart Container */
+/* Charts */
 .chart-container {
   background: var(--card-bg);
   padding: 25px;
@@ -205,6 +206,8 @@ body {
   outline: none;
   -webkit-appearance: none;
   cursor: pointer;
+  touch-action: pan-y;
+  /* Allows vertical scroll, but captures horizontal drag */
 }
 
 .slider-input::-webkit-slider-thumb {
