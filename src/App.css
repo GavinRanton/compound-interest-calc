@@ -243,6 +243,28 @@ body {
   background: #059669;
 }
 
+/* Summary Grid Layout */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+@media (min-width: 1024px) {
+  .summary-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  .summary-grid>* {
+    flex: 1;
+    min-width: 0;
+    /* Prevent flex blowout */
+  }
+}
+
 /* Summary Tile Styles */
 .summary-tile {
   background: white;
