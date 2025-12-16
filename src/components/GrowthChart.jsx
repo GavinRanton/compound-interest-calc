@@ -25,7 +25,7 @@ ChartJS.register(
     annotationPlugin
 );
 
-const GrowthChart = ({ labels, balanceData, contributionData, crossoverYear }) => {
+const GrowthChart = ({ labels, balanceData, contributionData, crossoverYear, comparisonBalanceData }) => {
 
     const options = {
         responsive: true,
@@ -78,26 +78,41 @@ const GrowthChart = ({ labels, balanceData, contributionData, crossoverYear }) =
         }
     };
 
+    const datasets = [
+        {
+            label: 'Total Balance (Plan A)',
+            data: balanceData,
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+            tension: 0.4,
+        },
+        {
+            label: 'Your Contributions',
+            data: contributionData,
+            borderColor: 'rgb(53, 162, 235)',
+            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            fill: true,
+            tension: 0.4,
+            hidden: !!comparisonBalanceData // Hide contributions if comparing, to reduce clutter
+        },
+    ];
+
+    if (comparisonBalanceData) {
+        datasets.push({
+            label: 'Total Balance (Plan B - Delayed)',
+            data: comparisonBalanceData,
+            borderColor: 'rgb(255, 159, 64)',
+            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+            fill: true,
+            tension: 0.4,
+            borderDash: [5, 5]
+        });
+    }
+
     const data = {
         labels,
-        datasets: [
-            {
-                label: 'Total Balance',
-                data: balanceData,
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: true,
-                tension: 0.4,
-            },
-            {
-                label: 'Your Contributions',
-                data: contributionData,
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                fill: true,
-                tension: 0.4,
-            },
-        ],
+        datasets,
     };
 
     return <Line options={options} data={data} />;

@@ -13,20 +13,55 @@
  * @returns {number} result.totalContributed - Total amount contributed
  * @returns {number} result.totalInterest - Total interest earned
  */
-export const calculateGrowth = (startAmount, monthlyContribution, annualRate, years, inflationRate = 0, adjustForInflation = false) => {
+export const calculateGrowth = (startAmount, monthlyContribution, annualRate, years, inflationRate = 0, adjustForInflation = false, delayYears = 0) => {
     const r = annualRate / 100;
     const n = 12; // Monthly compounding
     const totalMonths = years * 12;
+    const delayMonths = delayYears * 12;
 
     let balance = startAmount;
     let totalContributed = startAmount;
 
+    // Initial data point
     const balanceData = [startAmount];
     const contributionData = [startAmount];
     const labels = ['Year 0'];
 
-    // We'll track yearly data points for the chart to keep it clean
+    // Handle initial delay if any (balance just sits there? or starts at 0? Spec: "Delay Start")
+    // If "Delay Start", we assume they hold the cash? Or they haven't started saving yet.
+    // Let's assume they haven't started saving yet, so balance is 0 until delay is over.
+    // BUT what about "Starting Amount"? Usually that exists at T=0.
+    // If I delay starting, does my "Starting Amount" sit in a shoe box? Or do I only invest it at Year X?
+    // User goal: "Cost of Delay". Usually means: Option A (Start Now), Option B (Start in 10 years).
+    // Option B: For first 10 years, balance is 0. Then at year 10, we dump in "Starting Amount" (if applicable) and start monthly.
+
+    if (delayYears > 0) {
+        balance = 0;
+        totalContributed = 0;
+        // Reset initial data points to 0 if delayed
+        balanceData[0] = 0;
+        contributionData[0] = 0;
+    }
+
     for (let m = 1; m <= totalMonths; m++) {
+        // If we are still in the delay period
+        if (m <= delayMonths) {
+            // Do nothing? Or maybe just append 0s at year end.
+            if (m % 12 === 0) {
+                const year = m / 12;
+                labels.push(`Year ${year}`);
+                balanceData.push(0);
+                contributionData.push(0);
+            }
+            continue;
+        }
+
+        // If we just finished delay period, add starting amount? 
+        if (m === delayMonths + 1) {
+            balance = startAmount;
+            totalContributed = startAmount;
+        }
+
         // Apply monthly interest
         balance = balance * (1 + r / n);
         // Add monthly contribution
