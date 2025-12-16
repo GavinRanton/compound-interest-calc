@@ -192,7 +192,7 @@ const PlannerView = ({
                     {/* We can't easily link to tab here without parent callback, but visual cue is good. 
                         In App.jsx we can pass a 'switchToDrawdown' prop later if needed.
                     */}
-                </div>
+                </button>
 
             </section>
         </main>

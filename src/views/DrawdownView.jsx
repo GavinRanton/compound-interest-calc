@@ -7,7 +7,6 @@ const DrawdownView = ({
     drawdownAmount, setDrawdownAmount,
     drawdownRate, setDrawdownRate,
     drawdownYears, setDrawdownYears,
-    drawdownYears, setDrawdownYears,
     takeLumpSum, setTakeLumpSum,
     lumpSumPercentage, setLumpSumPercentage,
     currency,
