@@ -13,7 +13,7 @@
  * @returns {number} result.totalContributed - Total amount contributed
  * @returns {number} result.totalInterest - Total interest earned
  */
-export const calculateGrowth = (startAmount, monthlyContribution, annualRate, years) => {
+export const calculateGrowth = (startAmount, monthlyContribution, annualRate, years, inflationRate = 0, adjustForInflation = false) => {
     const r = annualRate / 100;
     const n = 12; // Monthly compounding
     const totalMonths = years * 12;
@@ -37,18 +37,38 @@ export const calculateGrowth = (startAmount, monthlyContribution, annualRate, ye
         if (m % 12 === 0) {
             const year = m / 12;
             labels.push(`Year ${year}`);
-            balanceData.push(Math.round(balance));
-            contributionData.push(Math.round(totalContributed));
+
+            let displayBalance = balance;
+            let displayContributed = totalContributed;
+
+            if (adjustForInflation) {
+                // Real Value = Nominal / (1 + inflation)^years
+                const discountFactor = Math.pow(1 + (inflationRate / 100), year);
+                displayBalance = balance / discountFactor;
+                displayContributed = totalContributed / discountFactor;
+            }
+
+            balanceData.push(Math.round(displayBalance));
+            contributionData.push(Math.round(displayContributed));
         }
+    }
+
+    let finalDisplayBalance = balance;
+    let finalDisplayContributed = totalContributed;
+
+    if (adjustForInflation) {
+        const discountFactor = Math.pow(1 + (inflationRate / 100), years);
+        finalDisplayBalance = balance / discountFactor;
+        finalDisplayContributed = totalContributed / discountFactor;
     }
 
     return {
         labels,
         balanceData,
         contributionData,
-        finalBalance: Math.round(balance),
-        totalContributed: Math.round(totalContributed),
-        totalInterest: Math.round(balance - totalContributed)
+        finalBalance: Math.round(finalDisplayBalance),
+        totalContributed: Math.round(finalDisplayContributed),
+        totalInterest: Math.round(finalDisplayBalance - finalDisplayContributed)
     };
 };
 

@@ -13,6 +13,11 @@ function App() {
   const [annualRate, setAnnualRate] = useState(7);
   const [years, setYears] = useState(30);
 
+  // Global Settings
+  const [currency, setCurrency] = useState('£');
+  const [inflationRate, setInflationRate] = useState(3);
+  const [isInflationAdjusted, setIsInflationAdjusted] = useState(false);
+
   // State for Drawdown Phase
   const [drawdownAmount, setDrawdownAmount] = useState(2000);
   const [drawdownRate, setDrawdownRate] = useState(5);
@@ -28,8 +33,8 @@ function App() {
     totalContributed,
     totalInterest
   } = useMemo(() =>
-    calculateGrowth(startAmount, monthlyContribution, annualRate, years),
-    [startAmount, monthlyContribution, annualRate, years]
+    calculateGrowth(startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted),
+    [startAmount, monthlyContribution, annualRate, years, inflationRate, isInflationAdjusted]
   );
 
   const crossoverYear = useMemo(() =>
@@ -52,7 +57,7 @@ function App() {
   );
 
   // Formatters
-  const formatCurrency = (val) => `£${val.toLocaleString()}`;
+  const formatCurrency = (val) => `${currency}${val.toLocaleString()}`;
   const formatPercent = (val) => `${val}%`;
   const formatYears = (val) => `${val} yrs`;
 
@@ -60,7 +65,46 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <h1>Watch Your Money Grow 🌱</h1>
-        <p>See how compound interest makes your savings explode!</p>
+        <p>See how compound interest {isInflationAdjusted ? "(and inflation)" : ""} makes your savings explode!</p>
+
+        <div className="settings-bar" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="setting-group">
+            <label style={{ fontWeight: '600', color: 'var(--text-muted)' }}>Currency: </label>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              style={{ padding: '5px 10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '1rem' }}
+            >
+              <option value="£">GBP (£)</option>
+              <option value="$">USD ($)</option>
+              <option value="€">EUR (€)</option>
+            </select>
+          </div>
+
+          <div className="setting-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label className="checkbox-label" style={{ marginBottom: 0 }}>
+              <input
+                type="checkbox"
+                checked={isInflationAdjusted}
+                onChange={(e) => setIsInflationAdjusted(e.target.checked)}
+              />
+              Adjust for Inflation?
+            </label>
+          </div>
+        </div>
+
+        {isInflationAdjusted && (
+          <div style={{ maxWidth: '400px', margin: '20px auto 0' }}>
+            <Slider
+              label="Inflation Rate"
+              value={inflationRate}
+              onChange={setInflationRate}
+              min={0} max={15} step={0.5}
+              unit="%"
+              formatFn={(v) => `${v}%`}
+            />
+          </div>
+        )}
       </header>
 
       <main className="main-grid">
@@ -73,7 +117,7 @@ function App() {
             value={startAmount}
             onChange={setStartAmount}
             min={0} max={10000} step={100}
-            unit="£"
+            unit={currency}
             formatFn={(v) => v.toLocaleString()}
             manualInput={true}
           />
@@ -83,7 +127,7 @@ function App() {
             value={monthlyContribution}
             onChange={setMonthlyContribution}
             min={0} max={4000} step={10}
-            unit="£"
+            unit={currency}
             formatFn={(v) => v.toLocaleString()}
           />
 
@@ -179,7 +223,7 @@ function App() {
             value={drawdownAmount}
             onChange={setDrawdownAmount}
             min={500} max={10000} step={100}
-            unit="£"
+            unit={currency}
             formatFn={(v) => v.toLocaleString()}
           />
           <div className="annual-withdrawal-display">
