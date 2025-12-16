@@ -105,7 +105,8 @@ function App() {
     finalBalance: drawdownFinalBalance,
     totalWithdrawn: drawdownTotalWithdrawn,
     lumpSum,
-    interestDeficitYear
+    interestDeficitYear,
+    ruinYear
   } = useMemo(() =>
     calculateDrawdown(finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum),
     [finalBalance, drawdownAmount, drawdownRate, drawdownYears, takeLumpSum]
@@ -238,6 +239,7 @@ function App() {
           drawdownTotalWithdrawn={drawdownTotalWithdrawn}
           lumpSum={lumpSum}
           interestDeficitYear={interestDeficitYear}
+          ruinYear={ruinYear}
           finalBalance={finalBalance}
           openModal={openModal}
           formatCurrency={formatCurrency}

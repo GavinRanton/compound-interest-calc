@@ -201,26 +201,21 @@ export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years
 
     let balance = takeLumpSum ? initialPot * 0.75 : initialPot;
     let totalWithdrawn = 0;
-
-    // If lump sum taken, that counts as an initial withdrawal? 
-    // Usually "living on the value" focuses on the income stream. 
-    // But for "Total Withdrawn" stat, maybe we should include it?
-    // Let's track it separately or just note it. 
-    // For the graph "Withdrawal Amounts", usually implies the cumulative income.
-    // Let's start totalWithdrawn at 0 (income stream) but maybe return lumpSum value.
+    let startPot = balance; // Track actual starting pot (post lump sum)
 
     const balanceData = [Math.round(balance)];
     const withdrawnData = [0];
     const labels = ['Year 0'];
 
     let interestDeficitYear = null; // When monthly drawdown > monthly interest
+    let ruinYear = null; // When balance hits 0
 
     for (let m = 1; m <= totalMonths; m++) {
         // Calculate monthly interest
         const monthlyInterest = balance * (r / n);
 
-        // Check for crossover (first time drawdown exceeds interest)
-        // Only relevant if balance > 0
+        // Check for deficit (drawdown > interest)
+        // Only if we still have money and haven't flagged it yet
         if (balance > 0 && interestDeficitYear === null && monthlyDrawdown > monthlyInterest) {
             interestDeficitYear = parseFloat((m / 12).toFixed(1));
         }
@@ -228,12 +223,21 @@ export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years
         // Apply interest
         balance += monthlyInterest;
 
-        // Subtract drawdown
-        balance -= monthlyDrawdown;
-        totalWithdrawn += monthlyDrawdown;
+        // Determine actual withdrawal (cannot exceed balance)
+        let actualWithdrawal = monthlyDrawdown;
+        if (balance < monthlyDrawdown) {
+            actualWithdrawal = balance; // Take whatever is left
+        }
 
-        // Prevent negative balance
-        if (balance < 0) balance = 0;
+        // Subtract drawdown
+        balance -= actualWithdrawal;
+        totalWithdrawn += actualWithdrawal;
+
+        // Check for Ruin (Bankruptcy)
+        if (balance <= 0.01 && ruinYear === null) { // Use small epsilon
+            balance = 0;
+            ruinYear = parseFloat((m / 12).toFixed(1));
+        }
 
         // Store yearly data
         if (m % 12 === 0) {
@@ -251,6 +255,7 @@ export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years
         finalBalance: Math.round(balance),
         totalWithdrawn: Math.round(totalWithdrawn),
         lumpSum: takeLumpSum ? Math.round(initialPot * 0.25) : 0,
-        interestDeficitYear
+        interestDeficitYear,
+        ruinYear
     };
 };

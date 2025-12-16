@@ -12,7 +12,7 @@ const DrawdownView = ({
     currency,
     drawdownLabels, drawdownBalanceData, drawdownWithdrawnData,
     drawdownFinalBalance, drawdownTotalWithdrawn,
-    lumpSum, interestDeficitYear,
+    lumpSum, interestDeficitYear, ruinYear,
     finalBalance, // From Accumulation phase, used as starting pot
     openModal, formatCurrency, formatPercent, formatYears
 }) => {
@@ -83,6 +83,23 @@ const DrawdownView = ({
             </section>
 
             <section className="viz-panel">
+                {/* Ruin Warning Bar */}
+                {ruinYear && (
+                    <div style={{
+                        background: '#fee2e2',
+                        border: '1px solid #fecaca',
+                        color: '#991b1b',
+                        padding: '15px',
+                        borderRadius: '12px',
+                        fontWeight: '600',
+                        textAlign: 'center',
+                        marginBottom: '10px',
+                        animation: 'fadeIn 0.5s'
+                    }}>
+                        ⚠️ Warning: You run out of money in Year {ruinYear}! 💸
+                    </div>
+                )}
+
                 <div className="summary-grid">
                     <SummaryTile
                         label="Starting Pot"
