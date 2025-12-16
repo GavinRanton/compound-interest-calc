@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 
 const InfoModal = ({ isOpen, onClose, title, content }) => {
-    if (!isOpen) return null;
-
     // Close on escape key
     useEffect(() => {
+        if (!isOpen) return; // Early return inside hook callback is fine
         const handleEsc = (e) => {
             if (e.key === 'Escape') onClose();
         };
         window.addEventListener('keydown', handleEsc);
         return () => window.removeEventListener('keydown', handleEsc);
-    }, [onClose]);
+    }, [isOpen, onClose]);
+
+    if (!isOpen) return null;
 
     return (
         <div className="modal-overlay" onClick={onClose}>

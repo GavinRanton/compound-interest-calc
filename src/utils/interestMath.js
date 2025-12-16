@@ -201,7 +201,7 @@ export const calculateDrawdown = (initialPot, monthlyDrawdown, annualRate, years
 
     let balance = takeLumpSum ? initialPot * 0.75 : initialPot;
     let totalWithdrawn = 0;
-    let startPot = balance; // Track actual starting pot (post lump sum)
+
 
     const balanceData = [Math.round(balance)];
     const withdrawnData = [0];

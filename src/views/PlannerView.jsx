@@ -11,10 +11,9 @@ const PlannerView = ({
     currency,
     growthLabels, growthBalanceData, growthContributionData,
     comparisonBalanceData, finalBalance, comparisonFinalBalance,
-    totalContributed, totalInterest,
-    crossoverYear, coastFireYear,
+    totalInterest,
     showComparison, setShowComparison, scenarioBDelay, setScenarioBDelay,
-    openModal, onNavigate, formatCurrency, formatPercent, formatYears,
+    onNavigate, formatCurrency, formatPercent,
     setCurrency, isInflationAdjusted, setIsInflationAdjusted, inflationRate, setInflationRate
 }) => {
     // Local state for Age based planning
