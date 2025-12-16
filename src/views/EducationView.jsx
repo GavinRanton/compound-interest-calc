@@ -51,6 +51,11 @@ const EducationView = ({
                 />
 
                 <Slider
+                    label="Time Horizon"
+                    value={years}
+                    onChange={setYears}
+                    min={1} max={50} step={1}
+                    unit=""
                     formatFn={formatYears}
                 />
 

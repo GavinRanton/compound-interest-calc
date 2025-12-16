@@ -94,7 +94,7 @@ const PlannerView = ({
                 />
 
                 <Slider
-                    label="Expected Return"
+                    label="Interest Rate"
                     value={annualRate}
                     onChange={setAnnualRate}
                     min={0} max={15} step={0.5}
