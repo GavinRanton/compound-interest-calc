@@ -217,6 +217,28 @@ function App() {
         <div style={{ fontSize: '1.4rem', fontWeight: '800' }}>{formatCurrency(finalBalance)}</div>
       </div>
 
+      {/* Global Trust Footer */}
+      <footer style={{
+        marginTop: '60px',
+        padding: '30px 20px 80px', // Extra padding at bottom for mobile sticky footer space
+        textAlign: 'center',
+        color: '#64748b',
+        fontSize: '0.85rem',
+        borderTop: '1px solid #e2e8f0'
+      }}>
+        <p style={{ marginBottom: '10px' }}>
+          <strong>Disclaimer:</strong> This tool is for educational purposes only and does not constitute financial advice. <br />
+          Projections are estimates and actual investment returns will vary.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+          <a href="/privacy.html" style={{ color: '#64748b', textDecoration: 'underline' }}>Privacy Policy</a>
+          <a href="/terms.html" style={{ color: '#64748b', textDecoration: 'underline' }}>Terms & Disclaimer</a>
+        </div>
+        <p style={{ marginTop: '20px', fontSize: '0.75rem', opacity: 0.7 }}>
+          &copy; {new Date().getFullYear()} Compound Interest Visualiser
+        </p>
+      </footer>
+
     </div>
   );
 }
