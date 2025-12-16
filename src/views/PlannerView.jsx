@@ -18,11 +18,13 @@ const PlannerView = ({
     // We initialise local state based on the global state prop 'years'
     // Default: Start at 30, Retire at (30 + years)
     const [currentAge, setCurrentAge] = useState(30);
-    const [retireAge, setRetireAge] = useState(30 + years);
+    const [retireAge, setRetireAge] = useState(30 + Number(years));
 
     // Sync effect: When Age sliders change, update global years
     useEffect(() => {
-        const newHorizon = retireAge - currentAge;
+        const c = Number(currentAge);
+        const r = Number(retireAge);
+        const newHorizon = r - c;
         if (newHorizon > 0 && newHorizon !== years) {
             setYears(newHorizon);
         }
